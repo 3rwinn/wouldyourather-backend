@@ -17,7 +17,7 @@ const client = new Pool({
   user: POSTGRES_USER,
   password: POSTGRES_PASSWORD,
   host: POSTGRES_HOST,
-  database: ENV === "prod" ? POSTGRES_DB : POSTGRES_DB_TEST,
+  database: ENV === "dev" ? POSTGRES_DB : POSTGRES_DB_TEST,
   port: parseInt(POSTGRES_PORT as string),
 });
 
