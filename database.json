@@ -2,15 +2,15 @@
     "dev": {
       "driver": "pg",
       "host": "127.0.0.1",
-      "database": "shopping",
-      "user": "shopping_user",
+      "database": "wouldyourather",
+      "user": "postgres",
       "password": "password123"
     },
     "test": {
       "driver": "pg",
       "host": "127.0.0.1",
-      "database": "shopping_test",
-      "user": "shopping_user",
+      "database": "wouldyourather_test",
+      "user": "postgres",
       "password": "password123"
     }
   }
