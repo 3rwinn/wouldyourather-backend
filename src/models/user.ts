@@ -10,8 +10,8 @@ export type User = {
   email: string;
   avatarUrl: string;
   password: string;
-  questions: string;
-  answers: string;
+  questions?: string;
+  answers?: string;
 };
 
 export type UserAuth = {
@@ -92,7 +92,7 @@ export class UserStore {
 
   async authenticate(email: string, password: string): Promise<User | null> {
     const conn = await client.connect();
-    const sql = "SELECT username, password FROM users WHERE username=($1)";
+    const sql = "SELECT email, password FROM users WHERE email=($1)";
 
     const result = await conn.query(sql, [email]);
 
