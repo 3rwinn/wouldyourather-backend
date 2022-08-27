@@ -13,6 +13,13 @@ const abort = (res: Response, code: number, msg?: string) => {
         .status(405)
         .json({ success: false, error: 405, message: "method not allowed" });
       break;
+    case 406:
+      res.status(406).json({
+        success: false,
+        error: 406,
+        message: msg ? msg : "not acceptable",
+      });
+      break;
     case 400:
       res.status(400).json({
         success: false,
@@ -31,7 +38,7 @@ const abort = (res: Response, code: number, msg?: string) => {
       res.status(401).json({
         success: false,
         error: 401,
-        message:  msg ? msg :  "not authorized",
+        message: msg ? msg : "not authorized",
       });
       break;
     default:
