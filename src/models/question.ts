@@ -3,7 +3,6 @@ import client from "../database";
 export type Question = {
   id?: number;
   author: number;
-  text: string;
   optionOne: string;
   optionTwo: string;
 };
@@ -85,8 +84,13 @@ export class QuestionStore {
   async delete(id: number): Promise<boolean> {
     try {
       const conn = await client.connect();
-      const sql = "DELETE FROM questions WHERE id=($1)";
 
+      // first we delete the answer related to the question
+      const answerDeleteSql = "DELETE FROM answers WHERE question=($1)";
+      await conn.query(answerDeleteSql, [id]);
+
+      // next we delete the question
+      const sql = "DELETE FROM questions WHERE id=($1)";
       await conn.query(sql, [id]);
 
       conn.release();
@@ -98,7 +102,7 @@ export class QuestionStore {
   }
 
   async addAnswer(
-    question_id: string,
+    question_id: number,
     optionOne?: string,
     optionTwo?: string
   ): Promise<Answer> {
