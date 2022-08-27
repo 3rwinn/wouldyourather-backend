@@ -89,8 +89,11 @@ const authenticate = async (_req: Request, res: Response) => {
       res.json({
         success: true,
         token: token,
+        id: u.id,
         name: u.name,
         email: u.email,
+        answers: u.answers,
+        questions: u.questions,
       });
     }
   } catch (err) {

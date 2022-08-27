@@ -13,7 +13,6 @@ const QuestionController = (app: express.Application) => {
   app.get("/questions", verifyAuthToken, index);
   app.get("/questions/:id", verifyAuthToken, show);
   app.delete("/questions/:id", verifyAuthToken, destroy);
-  app.post("/questions/:id/answer", verifyAuthToken, answer);
 };
 
 const store = new QuestionStore();
@@ -66,41 +65,6 @@ const destroy = async (_req: Request, res: Response) => {
     });
   } else {
     abort(res, 404, "Question not found");
-  }
-};
-
-const answer = async (_req: Request, res: Response) => {
-  const question_id = parseInt(_req.params.id);
-  const optionOneReq = _req.body.optionOne;
-  const optionTwoReq = _req.body.optionTwo;
-
-  try {
-    const questionData = await store.show(question_id);
-
-    if (questionData) {
-      const { result } = questionData;
-      const answerToAdd = {
-        // @ts-ignore
-        optionOne: optionOneReq ? optionOneReq : result.optionone,
-        // @ts-ignore
-        optionTwo: optionTwoReq ? optionTwoReq : result.optiontwo,
-      };
-
-      const finalResult: Answer = await store.addAnswer(
-        question_id,
-        answerToAdd.optionOne,
-        answerToAdd.optionTwo
-      );
-
-      res.json({
-        success: true,
-        answer: finalResult,
-      });
-    } else {
-      abort(res, 404, "Question not found");
-    }
-  } catch (err) {
-    abort(res, 400);
   }
 };
 
