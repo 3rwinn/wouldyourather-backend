@@ -1,11 +1,13 @@
 import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
+import cors from "cors";
 import UserController from "./controllers/userController";
 
 const app: express.Application = express();
-const address: string = "localhost:3000";
+const address: string = "localhost:3003";
 
 app.use(bodyParser.json());
+app.use(cors());
 
 
 app.get("/", function (req: Request, res: Response) {
@@ -14,7 +16,7 @@ app.get("/", function (req: Request, res: Response) {
 
 UserController(app);
 
-app.listen(3000, function () {
+app.listen(3003, function () {
   console.log(`starting app on: ${address}`);
 });
 

@@ -6,7 +6,7 @@ dotenv.config();
 const { TOKEN_SECRET } = process.env;
 
 describe("User Controller", () => {
-  let request = supertest("localhost:3000");
+  let request = supertest("localhost:3003");
 
   let token;
   let user_id;
@@ -15,7 +15,6 @@ describe("User Controller", () => {
     const testUser = {
       name: "John Doe",
       email: "john@doe.com",
-      avatarUrl: "https://unsplash.com/?water",
       password: "ifiwantitimmahaveit",
     };
 
