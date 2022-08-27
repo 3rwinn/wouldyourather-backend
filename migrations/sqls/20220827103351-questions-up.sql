@@ -5,6 +5,7 @@ CREATE TABLE questions(
     author INTEGER NOT NULL,
     optionOne TEXT NOT NULL,
     optionTwo TEXT NOT NULL,
+    
+    FOREIGN KEY (author) REFERENCES users(id) ON UPDATE CASCADE
 );
 
-ALTER TABLE questions ADD CONSTRAINT "questions_author_forein" FOREIGN KEY("author") REFERENCES users("id");
