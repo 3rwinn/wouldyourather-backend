@@ -8,7 +8,6 @@ export type User = {
   id?: number;
   name: string;
   email: string;
-  avatarUrl: string;
   password: string;
   questions?: string;
   answers?: string;
@@ -48,10 +47,24 @@ export class UserStore {
     }
   }
 
+  async findUserByEmail(email: string): Promise<User> {
+    try {
+      const sql = "SELECT * from users where email=($1)";
+      const conn = await client.connect();
+
+      const result = await conn.query(sql, [email]);
+
+      conn.release();
+      return result.rows[0];
+    } catch (err) {
+      throw new Error(`unable to retrieve user by email`);
+    }
+  }
+
   async create(u: User): Promise<User> {
     try {
       const sql =
-        "INSERT INTO users (name, email, avatarUrl, password) VALUES($1, $2, $3, $4) RETURNING *";
+        "INSERT INTO users (name, email, password) VALUES($1, $2, $3) RETURNING *";
       const conn = await client.connect();
 
       const hashPassword = bcrypt.hashSync(
@@ -59,12 +72,7 @@ export class UserStore {
         parseInt(saltRounds as string)
       );
 
-      const result = await conn.query(sql, [
-        u.name,
-        u.email,
-        u.avatarUrl,
-        hashPassword,
-      ]);
+      const result = await conn.query(sql, [u.name, u.email, hashPassword]);
       const user = result.rows[0];
 
       conn.release();
@@ -92,7 +100,7 @@ export class UserStore {
 
   async authenticate(email: string, password: string): Promise<User | null> {
     const conn = await client.connect();
-    const sql = "SELECT email, password FROM users WHERE email=($1)";
+    const sql = "SELECT name, email, password FROM users WHERE email=($1)";
 
     const result = await conn.query(sql, [email]);
 

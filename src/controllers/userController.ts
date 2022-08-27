@@ -41,20 +41,24 @@ const create = async (_req: Request, res: Response) => {
   const user: User = {
     name: _req.body.name,
     email: _req.body.email,
-    avatarUrl: _req.body.avatarUrl,
     password: _req.body.password,
   };
   try {
     // @TODO: find user by email to check if email already exist!
-    const newUser = await store.create(user);
-    // @ts-ignore
-    var token = jwt.sign({ user: newUser }, TOKEN_SECRET);
-    res.json({
-      success: true,
-      token: token,
-    });
+    const userAlreadyExist = await store.findUserByEmail(user.email);
+    if (userAlreadyExist) {
+      abort(res, 406, "An user with this email address already exists!");
+    } else {
+      await store.create(user);
+
+      res.json({
+        success: true,
+        userCreated: true,
+      });
+    }
   } catch (err) {
     console.log("pelo", err);
+    abort(res, 400);
   }
 };
 const destroy = async (_req: Request, res: Response) => {
@@ -85,6 +89,8 @@ const authenticate = async (_req: Request, res: Response) => {
       res.json({
         success: true,
         token: token,
+        name: u.name,
+        email: u.email,
       });
     }
   } catch (err) {
